@@ -38,26 +38,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleSendText(Intent intent) {
+    protected void handleSendText(Intent intent) {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (sharedText != null) {
             // Update UI to reflect text being shared
         }
     }
 
-    private void handleSendImage(Intent intent) {
-        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+    protected void handleSendImage(Intent sentIntent) {
+        Uri imageUri = (Uri) sentIntent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             // Update UI to reflect image being shared
-            Intent newIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            newIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            newIntent.setType("*/*");
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType(sentIntent.getType());
             intent.putExtra(Intent.EXTRA_TITLE, getFileNameFromUri(imageUri));
-            startActivityForResult(newIntent, requestCode);
+            startActivityForResult(intent, requestCode);
         }
     }
 
-    private void handleSendMultipleImages(Intent intent) {
+    protected void handleSendMultipleImages(Intent intent) {
         ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (imageUris != null) {
             // Update UI to reflect multiple images being shared
@@ -78,4 +78,5 @@ public class MainActivity extends AppCompatActivity {
 
         return fileName;
     }
+
 }
