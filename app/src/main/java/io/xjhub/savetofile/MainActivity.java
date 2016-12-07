@@ -44,27 +44,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
-                // Get contentUri from shared preferences
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                Uri contentUri = null;
                 try {
-                    contentUri = Uri.parse(sharedPref.getString("contentUri", null));
-                } catch (NullPointerException e) {
-                    // TODO Meaningful error message to user
-                    Log.e(LOG_TAG, Log.getStackTraceString(e));
-                }
+                    Uri contentUri = Uri.parse(sharedPref.getString("contentUri", null));
+                    Uri targetUri = resultData.getData();
 
-                // Copy file
-                Uri targetUri = resultData.getData();
-                try {
                     copyFile(contentUri, targetUri);
-                } catch (IOException e) {
-                    // TODO Meaningful error message to user
+
+                    Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
+
+                } catch (NullPointerException | IOException e) {
                     Log.e(LOG_TAG, Log.getStackTraceString(e));
+                    Toast.makeText(this, R.string.fail, Toast.LENGTH_LONG).show();
                 }
 
-                // Inform user
-                Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
                 finish();
             }
         }
