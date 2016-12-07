@@ -82,28 +82,25 @@ public class MainActivity extends AppCompatActivity {
 
     private String getFileNameFromUri(Uri uri) {
         String fileName = null;
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null, null);
 
-        try {
+        try (Cursor cursor = getContentResolver().query(uri, null, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
             }
-        } finally {
-            cursor.close();
         }
 
         return fileName;
     }
 
     private void copyFile(Uri inUri, Uri outUri) throws IOException {
-        InputStream inputStream = getContentResolver().openInputStream(inUri);
-        OutputStream outputStream = getContentResolver().openOutputStream(outUri);
-
-        try {
-            ByteStreams.copy(inputStream, outputStream);
-        } finally {
-            outputStream.close();
-            inputStream.close();
+        try (InputStream inputStream = getContentResolver().openInputStream(inUri);
+             OutputStream outputStream = getContentResolver().openOutputStream(outUri))
+        {
+            if (inputStream != null && outputStream != null) {
+                ByteStreams.copy(inputStream, outputStream);
+            } else {
+                throw new NullPointerException();
+            }
         }
     }
 
