@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action)) {
             handleSendFile(intent);
         } else {
+            // Finish activity when started manually
             finish();
         }
     }
@@ -103,6 +104,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
 }
