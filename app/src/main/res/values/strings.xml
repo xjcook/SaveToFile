@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SaveToFile</string>
+    <string name="success">File was successfully saved</string>
 </resources>

@@ -10,6 +10,7 @@ import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.common.io.ByteStreams;
 
@@ -25,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        // Do not call setContentView if activity is transparent
+        // setContentView(R.layout.activity_main);
 
         // Get intent, action
         Intent intent = getIntent();
@@ -60,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
                     // TODO Meaningful error message to user
                     Log.e(LOG_TAG, Log.getStackTraceString(e));
                 }
+
+                // Inform user
+                Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
+                finish();
             }
         }
     }
