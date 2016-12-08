@@ -2,4 +2,5 @@
     <string name="app_name">SaveToFile</string>
     <string name="success">File was successfully saved</string>
     <string name="fail">Oops something goes wrong</string>
+    <string name="permission_denied">Permission to read file was denied</string>
 </resources>
