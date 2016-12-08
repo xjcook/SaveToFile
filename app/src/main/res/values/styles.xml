@@ -9,9 +9,9 @@
     </style>
 
     <!-- Transparent application theme. -->
-    <style name="TransparentTheme" parent="Theme.AppCompat">
+    <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/semiTransparentBlack</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
