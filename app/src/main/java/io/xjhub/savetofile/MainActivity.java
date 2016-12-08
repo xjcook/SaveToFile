@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -87,21 +88,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                try {
-                    Uri contentUri = Uri.parse(sharedPref.getString("contentUri", null));
-                    Uri targetUri = resultData.getData();
-
-                    copyFile(contentUri, targetUri);
-
-                    Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
-
-                } catch (NullPointerException | IOException e) {
-                    Log.e(LOG_TAG, Log.getStackTraceString(e));
-                    Toast.makeText(this, R.string.fail, Toast.LENGTH_LONG).show();
-                }
-
-                finish();
+                new CopyFileTask().execute(resultData.getData());
             }
         }
     }
@@ -144,6 +131,37 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 throw new NullPointerException();
             }
+        }
+    }
+
+    private class CopyFileTask extends AsyncTask<Uri, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Uri... uris) {
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            try {
+                Uri contentUri = Uri.parse(sharedPref.getString("contentUri", null));
+                Uri targetUri = uris.length > 0 ? uris[0] : null;
+                copyFile(contentUri, targetUri);
+
+            } catch (NullPointerException | IOException e) {
+                cancel(true);
+                Log.e(LOG_TAG, Log.getStackTraceString(e));
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(MainActivity.this, R.string.success, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            Toast.makeText(MainActivity.this, R.string.fail, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
