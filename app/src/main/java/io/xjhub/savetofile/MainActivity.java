@@ -36,11 +36,9 @@ public class MainActivity extends AppCompatActivity {
         // Do not call setContentView if activity is transparent
         // setContentView(R.layout.activity_main);
 
-        // Get intent, action
         Intent intent = getIntent();
-        String action = intent.getAction();
 
-        if (Intent.ACTION_SEND.equals(action)) {
+        if (Intent.ACTION_SEND.equals(intent.getAction())) {
             Uri contentUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
             if (contentUri != null && "file".equals(contentUri.getScheme())) {
                 // Check & request permission when file scheme
@@ -113,9 +111,13 @@ public class MainActivity extends AppCompatActivity {
     private String getFileNameFromUri(Uri uri) {
         String fileName = null;
 
-        try (Cursor cursor = getContentResolver().query(uri, null, null, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+        if ("file".equals(uri.getScheme())) {
+            fileName = uri.getLastPathSegment();
+        } else if ("content".equals(uri.getScheme())) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
             }
         }
 
