@@ -26,8 +26,8 @@ import java.io.OutputStream;
 public class MainActivity extends Activity {
 
     private static final String LOG_TAG = "MainActivity";
-    private static final int REQUEST_CODE = 41;
-    private static final int REQUEST_READ_EXTERNAL_STORAGE = 51;
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 21;
+    private static final int REQUEST_CREATE_DOCUMENT = 41;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +76,21 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_LONG).show();
                     finish();
                 }
-                return;
             }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK && resultData != null) {
-                new CopyFileTask().execute(resultData.getData());
+        switch (requestCode) {
+            case REQUEST_CREATE_DOCUMENT: {
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    // Copy shared file to chosen location
+                    new CopyFileTask().execute(resultData.getData());
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.fail, Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
         }
     }
@@ -111,7 +116,7 @@ public class MainActivity extends Activity {
             docIntent.addCategory(Intent.CATEGORY_OPENABLE);
             docIntent.setType(type);
             docIntent.putExtra(Intent.EXTRA_TITLE, getFileNameFromUri(contentUri));
-            startActivityForResult(docIntent, REQUEST_CODE);
+            startActivityForResult(docIntent, REQUEST_CREATE_DOCUMENT);
         }
     }
 
