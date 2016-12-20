@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
                     // Copy shared file to chosen location
                     new CopyFileTask().execute(resultData.getData());
                 } else {
-                    Toast.makeText(MainActivity.this, R.string.fail, Toast.LENGTH_LONG).show();
+                    // Finish activity when action was canceled
                     finish();
                 }
             }
