@@ -98,10 +98,18 @@ public class MainActivity extends Activity {
             editor.putString("contentUri", contentUri.toString());
             editor.apply();
 
+            // Convert type
+            // i.e. "image/jpeg" to "image/*"
+            String type = intent.getType();
+            if (type.contains("/")) {
+                String[] parts = type.split("/");
+                type = parts[0] + "/*";
+            }
+
             // Create empty file
             Intent docIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             docIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            docIntent.setType(intent.getType());
+            docIntent.setType(type);
             docIntent.putExtra(Intent.EXTRA_TITLE, getFileNameFromUri(contentUri));
             startActivityForResult(docIntent, REQUEST_CODE);
         }
