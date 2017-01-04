@@ -121,6 +121,8 @@ public class MainActivity extends Activity {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                } else {
+                    fileName = uri.getLastPathSegment();
                 }
             }
         }
